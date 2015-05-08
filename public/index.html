@@ -20,25 +20,73 @@
     </div>
 
     <div class="row">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="stationID">气象站台编号</label>
-                <input type="text" class="form-control" id="stationID" placeholder="CN0011" ng-model="stationid">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="stationID">气象站台编号</label>
+                    <input type="text" class="form-control" id="stationID" placeholder="CN0011" ng-model="stationid">
+                </div>
+                <div class="form-group">
+                    <label for="reportTime">报文时间</label>
+                    <input type="text" class="form-control" id="reportTime" placeholder="2015 01 01 16" ng-model="reporttime">
+                </div>
+            </form>
+            <form action="" class="form-inline">
+                <div class="div-report">
+                    <label for="report">报文</label>
+                    <input type="text" class="form-control input-report" id="report" placeholder="" ng-model="report">
+                    <button type="button" ng-click="addReport()" class="btn btn-default">提交</button>
+                    <span ng-if="addsuccess" class="text-success">提交成功</span>
+                    <span ng-if="addfailed" class="text-danger">提交失败</span>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 queryform">
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="stationID">气象站台编号</label>
+                        <input type="text" class="form-control" id="stationquery" placeholder="CN0011" ng-model="queryid">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportTime">报文时间</label>
+                        <input type="text" class="form-control" id="timequery" placeholder="2015 01 01 16" ng-model="querytime">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" ng-click="queryReport()" class="btn btn-default">查询</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="reportTime">报文时间</label>
-                <input type="text" class="form-control" id="reportTime" placeholder="2015 01 01 16" ng-model="reporttime">
-            </div>
-        </form>
-        <form action="" class="form-inline">
-            <div class="div-report">
-                <label for="report">报文</label>
-                <input type="text" class="form-control input-report" id="report" placeholder="" ng-model="report">
-                <button type="button" ng-click="addReport()" class="btn btn-default">提交</button>
-                <span ng-if="addsuccess" class="text-success">提交成功</span>
-                <span ng-if="addfailed" class="text-danger">提交失败</span>
-            </div>
-        </form>
+        </div>
+    </div>
+
+    <div class="row" ng-if="querysuccess">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="table-station">气象站台编号</th>
+                <th class="table-time">报告时间</th>
+                <th class="table-report">报文</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ querydata.station }}</td>
+                <td>{{ querydata.time }}</td>
+                <td>{{ querydata.report }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row" ng-if="querynores">
+        <p class="queryres">
+            <span class="text-info">未找到结果</span>
+        </p>
+    </div>
+    <div class="row" ng-if="queryfailed">
+        <p class="queryres">
+            <span class="text-warning">服务器错误</span>
+        </p>
     </div>
 
     <div class="row">

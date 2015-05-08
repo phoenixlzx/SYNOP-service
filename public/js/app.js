@@ -65,6 +65,22 @@ angular.module('synop', [
                             $scope.addfailed = false;
                         }, 3000);
                     })
-            }
+            };
+
+            $scope.queryReport = function() {
+                $scope.querysuccess = $scope.querynores = $scope.queryfailed = false;
+                $http.get('/q/' + $scope.querytime + '/' + $scope.queryid)
+                    .success(function(data) {
+                        if (data) {
+                            $scope.querydata = data;
+                            $scope.querysuccess = true;
+                        } else {
+                            $scope.querynores = true;
+                        }
+                    })
+                    .error(function() {
+                        $scope.queryfailed = true;
+                    })
+            };
 
         }]);

@@ -19,3 +19,13 @@
 .input-report {
     width: 75% !important;
 }
+
+.queryres {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.queryform {
+    border-left: dotted 1px #5e5e5e;
+    padding-left: 3em;
+}
