@@ -7,12 +7,15 @@
  * */
 
 
-angular.module('synop', [])
+angular.module('synop', [
+    'flash'
+])
     .controller('synopController', [
         '$scope',
         '$http',
         '$interval',
-        function ($scope, $http, $interval) {
+        '$timeout',
+        function ($scope, $http, $interval, $timeout) {
 
             var getRecent = function () {
                 $http.get('/recent')
@@ -36,5 +39,32 @@ angular.module('synop', [])
                     });
             };
             $interval(getRecent, 5000);
+
+            $scope.addReport = function() {
+                $http({
+                    method: 'POST',
+                    url: '/add',
+                    data: {
+                        station: $scope.stationid,
+                        time: $scope.reporttime,
+                        report: $scope.report
+                    },
+                    header: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+                    .success(function() {
+                        $scope.addsuccess = true;
+                        $timeout(function() {
+                            $scope.addsuccess = false;
+                        }, 3000);
+                        // reset these to blank
+                        $scope.stationid = $scope.reporttime = $scope.report = '';
+                    })
+                    .error(function() {
+                        $scope.addfailed = true;
+                        $timeout(function() {
+                            $scope.addfailed = false;
+                        }, 3000);
+                    })
+            }
 
         }]);

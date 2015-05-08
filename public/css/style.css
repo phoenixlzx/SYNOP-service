@@ -1,13 +1,21 @@
 /* extra styles */
 
 .table-station {
-    width: 15%;
+    width: 10%;
 }
 
 .table-time {
-    width: 10%;
+    width: 15%;
 }
 
 .table-report {
     width: 75%;
+}
+
+.div-report {
+    margin: 5px;
+}
+
+.input-report {
+    width: 75% !important;
 }
