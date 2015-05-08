@@ -37,9 +37,9 @@ router.post('/add', function (req, res) {
             report: report
         }, function(err) {
             if (err) {
-                res.send(500);
+                res.status(500);
             } else {
-                res.send(200);
+                res.status(200);
             }
         });
 
@@ -64,9 +64,9 @@ router.get('/recent', function(req, res) {
             time: -1
         }).limit(10).toArray(function(err, reports) {
             if (err) {
-                res.send(500);
+                res.status(500);
             } else {
-                res.send(200, reports);
+                res.status(200).send(reports);
             }
         });
 
@@ -98,9 +98,9 @@ router.get('/q/:time/:station', function(req, res) {
             station: station
         }, function(err, report) {
             if (err) {
-                res.send(500);
+                res.status(500);
             } else {
-                res.send(200, report);
+                res.status(200).send(report);
             }
         });
 
