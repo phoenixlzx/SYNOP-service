@@ -24,7 +24,7 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="stationID">气象站台编号</label>
-                    <input type="text" class="form-control" id="stationID" placeholder="CN0011" ng-model="stationid">
+                    <input type="text" class="form-control" id="stationID" placeholder="12123" ng-model="stationid">
                 </div>
                 <div class="form-group">
                     <label for="reportTime">报文时间</label>
@@ -37,7 +37,7 @@
                     <input type="text" class="form-control input-report" id="report" placeholder="" ng-model="report">
                     <button type="button" ng-click="addReport()" class="btn btn-default">提交</button>
                     <span ng-if="addsuccess" class="text-success">提交成功</span>
-                    <span ng-if="addfailed" class="text-danger">提交失败</span>
+                    <span ng-if="addfailed" class="text-danger">提交失败 <span ng-if="errdata" ng-model="errdata"></span></span>
                 </div>
             </form>
         </div>
@@ -46,14 +46,21 @@
                 <form class="form-inline">
                     <div class="form-group">
                         <label for="stationID">气象站台编号</label>
-                        <input type="text" class="form-control" id="stationquery" placeholder="CN0011" ng-model="queryid">
+                        <input type="text" class="form-control" id="stationquery" placeholder="11123" ng-model="queryid">
                     </div>
                     <div class="form-group">
                         <label for="reportTime">报文时间</label>
                         <input type="text" class="form-control" id="timequery" placeholder="2015 01 01 16" ng-model="querytime">
                     </div>
-                    <div class="form-group">
-                        <button type="button" ng-click="queryReport()" class="btn btn-default">查询</button>
+                </form>
+                <form class="form-inline">
+                    <div class="div-report">
+                        <div class="form-group">
+                            <button type="button" ng-click="queryReport()" class="btn btn-default">查询</button>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" ng-click="emptyReport()" class="btn btn-default">清空</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -61,6 +68,7 @@
     </div>
 
     <div class="row" ng-if="querysuccess">
+        <h4>搜索结果</h4>
         <table class="table">
             <thead>
             <tr>
@@ -73,7 +81,7 @@
             <tr>
                 <td>{{ querydata.station }}</td>
                 <td>{{ querydata.time }}</td>
-                <td>{{ querydata.report }}</td>
+                <td>{{ querydata.repDecoded }}<br>源报文: <code>{{ querydata.report }}</code></td>
             </tr>
             </tbody>
         </table>
@@ -103,7 +111,7 @@
             <tr ng-repeat="rr in recentReports track by $index">
                 <td>{{ rr.station }}</td>
                 <td>{{ rr.time }}</td>
-                <td>{{ rr.report }}</td>
+                <td>{{ rr.repDecoded }}<br>源报文: <code>{{ rr.report }}</code></td>
             </tr>
             </tbody>
         </table>
