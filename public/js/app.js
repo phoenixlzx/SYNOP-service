@@ -51,7 +51,7 @@ angular.module('synop', [
                     },
                     header: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })
-                    .success(function() {
+                    .success(function(data) {
                         $scope.addsuccess = true;
                         $timeout(function() {
                             $scope.addsuccess = false;
@@ -59,8 +59,9 @@ angular.module('synop', [
                         // reset these to blank
                         $scope.stationid = $scope.reporttime = $scope.report = '';
                     })
-                    .error(function() {
+                    .error(function(data) {
                         $scope.addfailed = true;
+                        $scope.errdata = data;
                         $timeout(function() {
                             $scope.addfailed = false;
                         }, 3000);
@@ -82,5 +83,10 @@ angular.module('synop', [
                         $scope.queryfailed = true;
                     })
             };
+
+            $scope.emptyReport = function() {
+                $scope.querytime = $scope.queryid = '';
+                $scope.querysuccess = false;
+            }
 
         }]);

@@ -5,6 +5,8 @@ var MongoClient = require('mongodb').MongoClient;
 
 var config = require('../config');
 
+var synop = require('../lib/synop');
+
 /* GET home page. */
 router.get('/', function (req, res) {
     // redirect to index.html to use angular.js
@@ -17,32 +19,40 @@ router.post('/add', function (req, res) {
     var station = req.body.station + '';
     var report = req.body.report + '';
 
-    MongoClient.connect(config.mongodb, {
-        db: {
-            native_parser: true,
-            w: 1
-        }
-    }, function (err, db) {
+    synop.decode(report, function(err, decoded) {
         if (err) {
-            throw err;
+            return res.status(400).send(err);
+        } else {
+            MongoClient.connect(config.mongodb, {
+                db: {
+                    native_parser: true,
+                    w: 1
+                }
+            }, function (err, db) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send();
+                }
+
+                var collection = db.collection('reports');
+
+                // TODO integrity check
+
+                collection.insertOne({
+                    time: time,
+                    station: station,
+                    report: report,
+                    repDecoded: decoded
+                }, function(err) {
+                    if (err) {
+                        res.status(500).send();
+                    } else {
+                        res.status(200).send();
+                    }
+                });
+
+            });
         }
-
-        var collection = db.collection('reports');
-
-        // TODO integrity check
-
-        collection.insertOne({
-            time: time,
-            station: station,
-            report: report
-        }, function(err) {
-            if (err) {
-                res.status(500).send();
-            } else {
-                res.status(200).send();
-            }
-        });
-
     });
 });
 
@@ -55,7 +65,8 @@ router.get('/recent', function(req, res) {
         }
     }, function (err, db) {
         if (err) {
-            throw err;
+            console.log(err);
+            return res.status(500).send();
         }
 
         var collection = db.collection('reports');
@@ -86,7 +97,8 @@ router.get('/q/:time/:station', function(req, res) {
         }
     }, function (err, db) {
         if (err) {
-            throw err;
+            console.log(err);
+            return res.status(500).send();
         }
 
         var collection = db.collection('reports');
