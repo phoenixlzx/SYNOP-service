@@ -13,27 +13,26 @@ router.get('/', function (req, res) {
     res.redirect('/index.html');
 });
 
-router.post('/add', function (req, res) {
+MongoClient.connect(config.mongodb, {
+    db: {
+        native_parser: true,
+        w: 1
+    }
+}, function (err, db) {
+    if (err) {
+        console.error(err);
+    }
 
-    var time = req.body.time + '';
-    var station = req.body.station + '';
-    var report = req.body.report + '';
+    router.post('/add', function (req, res) {
 
-    synop.decode(report, function(err, decoded) {
-        if (err) {
-            return res.status(400).send(err);
-        } else {
-            MongoClient.connect(config.mongodb, {
-                db: {
-                    native_parser: true,
-                    w: 1
-                }
-            }, function (err, db) {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).send();
-                }
+        var time = req.body.time + '';
+        var station = req.body.station + '';
+        var report = req.body.report + '';
 
+        synop.decode(report, function(err, decoded) {
+            if (err) {
+                return res.status(400).send(err);
+            } else {
                 var collection = db.collection('reports');
 
                 // TODO integrity check
@@ -50,24 +49,11 @@ router.post('/add', function (req, res) {
                         res.status(200).send();
                     }
                 });
-
-            });
-        }
+            }
+        });
     });
-});
 
-router.get('/recent', function(req, res) {
-
-    MongoClient.connect(config.mongodb, {
-        db: {
-            native_parser: true,
-            w: 1
-        }
-    }, function (err, db) {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
+    router.get('/recent', function(req, res) {
 
         var collection = db.collection('reports');
 
@@ -83,23 +69,10 @@ router.get('/recent', function(req, res) {
 
     });
 
-});
+    router.get('/q/:time/:station', function(req, res) {
 
-router.get('/q/:time/:station', function(req, res) {
-
-    var time = req.params.time + '';
-    var station = req.params.station + '';
-
-    MongoClient.connect(config.mongodb, {
-        db: {
-            native_parser: true,
-            w: 1
-        }
-    }, function (err, db) {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
+        var time = req.params.time + '';
+        var station = req.params.station + '';
 
         var collection = db.collection('reports');
 
